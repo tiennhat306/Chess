@@ -79,6 +79,24 @@ class Board:
         if white_king: return 1
         if black_king: return -1
 
+    def stale_mate(self):
+        count_moves_white = 0
+        count_moves_black = 0
+
+        for row in range(ROWS):
+            for col in range(COLS):
+                square = self.squares[row][col]
+                if square.has_piece():
+                    piece = square.piece
+                    if piece.color == 'white':
+                        count_moves_white += len(piece.moves)
+                    else:
+                        count_moves_black += len(piece.moves)
+
+        if count_moves_white == 0 or count_moves_black == 0:
+            return 1
+        return 0
+
 
     def valid_move(self, piece, move):
         return move in piece.moves

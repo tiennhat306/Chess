@@ -17,130 +17,154 @@ class AI:
     def scoremap(self, piece, row, col):
         scores = 0
         if piece.name == 'pawn':
-            if piece.color == 'black':
-                scores = [
-                    [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
-                    [0.02, 0.01, 0.00, 0.00, 0.00, 0.00, 0.01, 0.02],
-                    [0.01, 0.01, 0.03, 0.06, 0.06, 0.03, 0.01, 0.01],
-                    [0.02, 0.02, 0.04, 0.07, 0.07, 0.04, 0.02, 0.02],
-                    [0.03, 0.03, 0.05, 0.08, 0.08, 0.05, 0.03, 0.03],
-                    [0.07, 0.07, 0.08, 0.09, 0.09, 0.08, 0.07, 0.07],
-                    [0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10],
-                    [9.00, 9.00, 9.00, 9.00, 9.00, 9.00, 9.00, 9.00],
+            pawn_scores = [
+                [0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8],
+                [0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7],
+                [0.3, 0.3, 0.4, 0.5, 0.5, 0.4, 0.3, 0.3],
+                [0.25, 0.25, 0.3, 0.45, 0.45, 0.3, 0.25, 0.25],
+                [0.2, 0.2, 0.2, 0.4, 0.4, 0.2, 0.2, 0.2],
+                [0.25, 0.15, 0.1, 0.2, 0.2, 0.1, 0.15, 0.25],
+                [0.25, 0.3, 0.3, 0.0, 0.0, 0.3, 0.3, 0.25],
+                [0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2]
             ]
-            elif piece.color == 'white':
-                scores = [
-                    [9.00, 9.00, 9.00, 9.00, 9.00, 9.00, 9.00, 9.00],
-                    [0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10],
-                    [0.07, 0.07, 0.08, 0.09, 0.09, 0.08, 0.07, 0.07],
-                    [0.03, 0.03, 0.05, 0.08, 0.08, 0.05, 0.03, 0.03],
-                    [0.02, 0.02, 0.04, 0.07, 0.07, 0.04, 0.02, 0.02],
-                    [0.01, 0.01, 0.03, 0.06, 0.06, 0.03, 0.01, 0.01],
-                    [0.02, 0.01, 0.00, 0.00, 0.00, 0.00, 0.01, 0.02],
-                    [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
-            ]
+            if piece.color == 'white':
+                scores = pawn_scores
+
+            elif piece.color == 'black':
+                scores = pawn_scores[::-1]
 
         elif piece.name == 'knight':
-            scores = [
-                    [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
-                    [0.00, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.00],
-                    [0.00, 0.02, 0.06, 0.05, 0.05, 0.06, 0.02, 0.00],
-                    [0.00, 0.03, 0.05, 0.10, 0.10, 0.05, 0.03, 0.00],
-                    [0.00, 0.03, 0.05, 0.10, 0.10, 0.05, 0.03, 0.00],
-                    [0.00, 0.02, 0.06, 0.05, 0.05, 0.06, 0.02, 0.00],
-                    [0.00, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.00],
-                    [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
+            knight_scores = [
+                [0.0, 0.1, 0.2, 0.2, 0.2, 0.2, 0.1, 0.0],
+                [0.1, 0.3, 0.5, 0.5, 0.5, 0.5, 0.3, 0.1],
+                [0.2, 0.5, 0.6, 0.65, 0.65, 0.6, 0.5, 0.2],
+                [0.2, 0.55, 0.65, 0.7, 0.7, 0.65, 0.55, 0.2],
+                [0.2, 0.5, 0.65, 0.7, 0.7, 0.65, 0.5, 0.2],
+                [0.2, 0.55, 0.6, 0.65, 0.65, 0.6, 0.55, 0.2],
+                [0.1, 0.3, 0.5, 0.55, 0.55, 0.5, 0.3, 0.1],
+                [0.0, 0.1, 0.2, 0.2, 0.2, 0.2, 0.1, 0.0]
             ]
+            if piece.color == 'white':
+                scores = knight_scores
+            elif piece.color == 'black':
+                scores = knight_scores[::-1]
 
         elif piece.name == 'bishop':
-            scores = [
-                    [0.02, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.02],
-                    [0.01, 0.05, 0.03, 0.03, 0.03, 0.03, 0.05, 0.01],
-                    [0.01, 0.03, 0.07, 0.05, 0.05, 0.07, 0.03, 0.01],
-                    [0.01, 0.03, 0.05, 0.10, 0.10, 0.05, 0.03, 0.01],
-                    [0.01, 0.03, 0.05, 0.10, 0.10, 0.05, 0.03, 0.01],
-                    [0.01, 0.03, 0.07, 0.05, 0.05, 0.07, 0.03, 0.01],
-                    [0.01, 0.05, 0.03, 0.03, 0.03, 0.03, 0.05, 0.01],
-                    [0.02, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.02],
+            bishop_scores = [
+                [0.0, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.0],
+                [0.2, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.2],
+                [0.2, 0.4, 0.5, 0.6, 0.6, 0.5, 0.4, 0.2],
+                [0.2, 0.5, 0.5, 0.6, 0.6, 0.5, 0.5, 0.2],
+                [0.2, 0.4, 0.6, 0.6, 0.6, 0.6, 0.4, 0.2],
+                [0.2, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.2],
+                [0.2, 0.5, 0.4, 0.4, 0.4, 0.4, 0.5, 0.2],
+                [0.0, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.0]
             ]
+            if piece.color == 'white':
+                scores = bishop_scores
+            elif piece.color == 'black':
+                scores = bishop_scores[::-1]
+
+        elif piece.name == 'rook':
+            rook_scores = [
+                [0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25],
+                [0.5, 0.75, 0.75, 0.75, 0.75, 0.75, 0.75, 0.5],
+                [0.0, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.0],
+                [0.0, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.0],
+                [0.0, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.0],
+                [0.0, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.0],
+                [0.0, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.0],
+                [0.25, 0.25, 0.25, 0.5, 0.5, 0.25, 0.25, 0.25]
+            ]
+            if piece.color == 'white':
+                scores = rook_scores
+            elif piece.color == 'black':
+                scores = rook_scores[::-1]
+
+        elif piece.name == 'queen':
+            queen_scores = [
+                [0.0, 0.2, 0.2, 0.3, 0.3, 0.2, 0.2, 0.0],
+                [0.2, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.2],
+                [0.2, 0.4, 0.5, 0.5, 0.5, 0.5, 0.4, 0.2],
+                [0.3, 0.4, 0.5, 0.5, 0.5, 0.5, 0.4, 0.3],
+                [0.4, 0.4, 0.5, 0.5, 0.5, 0.5, 0.4, 0.3],
+                [0.2, 0.5, 0.5, 0.5, 0.5, 0.5, 0.4, 0.2],
+                [0.2, 0.4, 0.5, 0.4, 0.4, 0.4, 0.4, 0.2],
+                [0.0, 0.2, 0.2, 0.3, 0.3, 0.2, 0.2, 0.0]
+            ]
+            if piece.color == 'white':
+                scores = queen_scores
+            elif piece.color == 'black':
+                scores = queen_scores[::-1]
         
-        elif piece.name == 'king':
-            if piece.color == 'black':
-                scores = [
-                    [0.05, 0.50, 0.10, 0.00, 0.00, 0.00, 0.10, 0.05],
-                    [0.02, 0.02, 0.00, 0.00, 0.00, 0.00, 0.02, 0.02],
-                    [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
-                    [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
-                    [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
-                    [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
-                    [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
-                    [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
-                ]
-            
-            elif piece.color == 'white':
-                scores = [
-                    [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
-                    [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
-                    [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
-                    [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
-                    [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
-                    [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
-                    [0.02, 0.02, 0.00, 0.00, 0.00, 0.00, 0.02, 0.02],
-                    [0.05, 0.50, 0.10, 0.00, 0.00, 0.00, 0.10, 0.05],
-                ]
+        # elif piece.name == 'king':
+        #     king_scores = [
+        #         [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
+        #         [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
+        #         [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
+        #         [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
+        #         [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
+        #         [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
+        #         [0.02, 0.02, 0.00, 0.00, 0.00, 0.00, 0.02, 0.02],
+        #         [0.05, 0.50, 0.10, 0.00, 0.00, 0.00, 0.10, 0.05]
+        #     ]
+        #     if piece.color == 'white':
+        #         scores = king_scores
+        #
+        #     elif piece.color == 'black':
+        #         scores = king_scores[::-1]
 
-        else :
-            scores = [
-                    [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
-                    [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
-                    [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
-                    [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
-                    [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
-                    [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
-                    [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
-                    [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
-            ]
 
-        eval = -scores[row][col] if piece.color == 'black' else scores[row][col]
-        return eval
+        # eval = -scores[row][col] if piece.color == 'black' else scores[row][col]
+        return scores[row][col]
 
-    def threats(self, board, piece):
-        eval = 0
-        for move in piece.moves:
-            attacked = board.squares[move.final.row][move.final.col]
-            if attacked.has_piece():
-                if attacked.piece.color != piece.color:
-                    # checks
-                    if attacked.piece.name == 'king':
-                        eval += attacked.piece.value / 10500
-                    
-                    # threat
-                    else:
-                        eval += attacked.piece.value / 45
+    # def threats(self, board, piece):
+    #     eval = 0
+    #     for move in piece.moves:
+    #         attacked = board.squares[move.final.row][move.final.col]
+    #         if attacked.has_piece():
+    #             if attacked.piece.color != piece.color:
+    #                 # checks
+    #                 if attacked.piece.name == 'king':
+    #                     eval += attacked.piece.value / 10500
+    #
+    #                 # threat
+    #                 else:
+    #                     eval += attacked.piece.value / 45
+    #
+    #     return eval
 
-        return eval
-
-    def static_eval(self, board):
+    def score_board(self, board):
         # var
-        eval = 0
+        score = 0
 
         for row in range(ROWS):
             for col in range(COLS):
                 if board.squares[row][col].has_piece():
                     # piece
                     piece =  board.squares[row][col].piece
-                    # white - black
-                    eval += piece.value
-                    # scoremap
-                    eval += self.scoremap(piece, row, col)
-                    # moves
-                    if piece.name != 'queen': eval += 0.01 * len(piece.moves)
-                    else: eval += 0.003 * len(piece.moves)
-                    # checks
-                    eval += self.threats(board, piece)
-        
-        eval = round(eval, 5)
-        return eval
+
+                    piece_position_score = 0
+                    if piece.name != 'king':
+                        piece_position_score = self.scoremap(piece, row, col)
+                    if piece.color == 'white':
+                        score -= piece.value + piece_position_score
+                    elif piece.color == 'black':
+                        score += piece.value + piece_position_score
+
+                    # score += piece.value
+                    # # scoremap
+                    # score += self.scoremap(piece, row, col)
+                    # # moves
+                    # if piece.name != 'queen':
+                    #     score += 0.01 * len(piece.moves)
+                    # else:
+                    #     score += 0.003 * len(piece.moves)
+                    # # checks
+                    # score += self.threats(board, piece)
+
+        # score = round(score, 5)
+        return score
 
     def get_moves(self, board, color):
         moves = []
@@ -155,12 +179,12 @@ class AI:
 
     def minimax(self, board, depth, maximizing, alpha, beta):
         if depth == 0:
-            return self.static_eval(board), None # eval, move
+            return self.score_board(board), None # eval, move
         
         # white
         if maximizing:
             max_eval = -math.inf
-            moves = self.get_moves(board, 'white')
+            moves = self.get_moves(board, 'black')
             for move in moves:
                 self.explored += 1
                 piece = board.squares[move.initial.row][move.initial.col].piece
@@ -183,7 +207,7 @@ class AI:
         # black
         elif not maximizing:
             min_eval = math.inf
-            moves = self.get_moves(board, 'black')
+            moves = self.get_moves(board, 'white')
             for move in moves:
                 self.explored += 1
                 piece = board.squares[move.initial.row][move.initial.col].piece
@@ -204,29 +228,25 @@ class AI:
 
             return min_eval, best_move # eval, move
 
-    # ---------
-    # MAIN EVAL
-    # ---------
 
-    def eval(self, main_board):
+    def find_best_move(self, main_board):
         self.explored = 0
 
         # add last move
         last_move = main_board.last_move
         self.game_moves.append(last_move)
 
-        # printing
         print('\nFinding best move...')
 
         # minimax initial call
-        eval, move = self.minimax(main_board, self.depth, False, -math.inf, math.inf) # eval, move
+        eval, move = self.minimax(main_board, self.depth, True, -math.inf, math.inf) # eval, move
 
         # printing
-        print('\n- Initial eval:',self.static_eval(main_board))
+        print('\n- Initial eval:', self.score_board(main_board))
         print('- Final eval:', eval)
         print('- Boards explored', self.explored)
-        if eval >= 5000: print('* White MATE!')
-        if eval <= -5000: print('* Black MATE!')
+        # if eval >= 5000: print('* White MATE!')
+        # if eval <= -5000: print('* Black MATE!')
             
         # append
         self.game_moves.append(move)

@@ -78,19 +78,18 @@ class Main:
 
                             self.check_end_game()
 
-                            # next -> AI
+                            # Đến lượt -> AI
                             game.next_turn()
-                            
-                            # --------------
-                            # >>>>> AI >>>>>
-                            # --------------
+
+                            # --------- AI ----------
+
 
                             # update
                             game.unselect_piece()
                             game.show_pieces(screen)
                             pygame.display.update()
                             # optimal move
-                            move = ai.eval(board)
+                            move = ai.find_best_move(board)
                             initial = move.initial
                             final = move.final
                             # piece
@@ -155,6 +154,10 @@ class Main:
             self.drawEndGameText(self.screen, 'Trắng thắng')
         elif checkmate == -1:
             self.drawEndGameText(self.screen, 'Đen thắng')
+
+        stalemate = self.game.board.stale_mate()
+        if stalemate:
+            self.drawEndGameText(self.screen, 'Hòa')
 
 
 if __name__ == '__main__':
