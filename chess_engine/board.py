@@ -59,6 +59,27 @@ class Board:
         if final.row == promote_row:
             self.squares[final.row][final.col].piece = Queen(piece.color)
 
+    def check_mate(self):
+        white_king = False
+        black_king = False
+
+        for row in range(ROWS):
+            for col in range(COLS):
+                square = self.squares[row][col]
+                if square.has_piece():
+                    piece = square.piece
+                    if piece.color == 'white':
+                        if piece.name == 'king':
+                            white_king = True
+                    else:
+                        if piece.name == 'king':
+                            black_king = True
+
+        if white_king and black_king: return 0
+        if white_king: return 1
+        if black_king: return -1
+
+
     def valid_move(self, piece, move):
         return move in piece.moves
 

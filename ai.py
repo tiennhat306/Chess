@@ -1,35 +1,24 @@
 import copy, math, random
 
 from utils.const import *
-from chess_ai.book import Book
 
 class AI:
 
-    def __init__(self, engine='book', depth=3):
-        self.engine = engine
+    def __init__(self, depth=3):
         self.depth = depth
-        self.book = Book()
         self.color = 'black'
         self.game_moves = []
         self.explored = 0
 
-    # ----
-    # BOOK
-    # ----
-
-    def book_move(self):
-        move = self.book.next_move(self.game_moves, weighted=True)
-        return move
-
     # -------
-    # MINIMAX
+    # MINIMAX - ALPHA BETA
     # -------
 
-    def heatmap(self, piece, row, col):
-        hmp = 0
+    def scoremap(self, piece, row, col):
+        scores = 0
         if piece.name == 'pawn':
             if piece.color == 'black':
-                hmp = [ 
+                scores = [
                     [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
                     [0.02, 0.01, 0.00, 0.00, 0.00, 0.00, 0.01, 0.02],
                     [0.01, 0.01, 0.03, 0.06, 0.06, 0.03, 0.01, 0.01],
@@ -40,7 +29,7 @@ class AI:
                     [9.00, 9.00, 9.00, 9.00, 9.00, 9.00, 9.00, 9.00],
             ]
             elif piece.color == 'white':
-                hmp = [ 
+                scores = [
                     [9.00, 9.00, 9.00, 9.00, 9.00, 9.00, 9.00, 9.00],
                     [0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10],
                     [0.07, 0.07, 0.08, 0.09, 0.09, 0.08, 0.07, 0.07],
@@ -52,7 +41,7 @@ class AI:
             ]
 
         elif piece.name == 'knight':
-            hmp = [ 
+            scores = [
                     [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
                     [0.00, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.00],
                     [0.00, 0.02, 0.06, 0.05, 0.05, 0.06, 0.02, 0.00],
@@ -64,7 +53,7 @@ class AI:
             ]
 
         elif piece.name == 'bishop':
-            hmp = [ 
+            scores = [
                     [0.02, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.02],
                     [0.01, 0.05, 0.03, 0.03, 0.03, 0.03, 0.05, 0.01],
                     [0.01, 0.03, 0.07, 0.05, 0.05, 0.07, 0.03, 0.01],
@@ -77,7 +66,7 @@ class AI:
         
         elif piece.name == 'king':
             if piece.color == 'black':
-                hmp = [ 
+                scores = [
                     [0.05, 0.50, 0.10, 0.00, 0.00, 0.00, 0.10, 0.05],
                     [0.02, 0.02, 0.00, 0.00, 0.00, 0.00, 0.02, 0.02],
                     [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
@@ -89,7 +78,7 @@ class AI:
                 ]
             
             elif piece.color == 'white':
-                hmp = [ 
+                scores = [
                     [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
                     [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
                     [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
@@ -101,7 +90,7 @@ class AI:
                 ]
 
         else :
-            hmp = [ 
+            scores = [
                     [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
                     [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
                     [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
@@ -112,7 +101,7 @@ class AI:
                     [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
             ]
 
-        eval = -hmp[row][col] if piece.color == 'black' else hmp[row][col]
+        eval = -scores[row][col] if piece.color == 'black' else scores[row][col]
         return eval
 
     def threats(self, board, piece):
@@ -142,8 +131,8 @@ class AI:
                     piece =  board.squares[row][col].piece
                     # white - black
                     eval += piece.value
-                    # heatmap
-                    eval += self.heatmap(piece, row, col)
+                    # scoremap
+                    eval += self.scoremap(piece, row, col)
                     # moves
                     if piece.name != 'queen': eval += 0.01 * len(piece.moves)
                     else: eval += 0.003 * len(piece.moves)
@@ -226,28 +215,18 @@ class AI:
         last_move = main_board.last_move
         self.game_moves.append(last_move)
 
-        # book engine
-        if self.engine == 'book':
-            move = self.book_move()
+        # printing
+        print('\nFinding best move...')
 
-            # no more book moves ?
-            if move is None:
-                self.engine = 'minimax'
+        # minimax initial call
+        eval, move = self.minimax(main_board, self.depth, False, -math.inf, math.inf) # eval, move
 
-        # minimax engine
-        if self.engine == 'minimax':
-            # printing
-            print('\nFinding best move...')
-                        
-            # minimax initial call
-            eval, move = self.minimax(main_board, self.depth, False, -math.inf, math.inf) # eval, move
-            
-            # printing
-            print('\n- Initial eval:',self.static_eval(main_board))
-            print('- Final eval:', eval)
-            print('- Boards explored', self.explored)
-            if eval >= 5000: print('* White MATE!')
-            if eval <= -5000: print('* Black MATE!')
+        # printing
+        print('\n- Initial eval:',self.static_eval(main_board))
+        print('- Final eval:', eval)
+        print('- Boards explored', self.explored)
+        if eval >= 5000: print('* White MATE!')
+        if eval <= -5000: print('* Black MATE!')
             
         # append
         self.game_moves.append(move)

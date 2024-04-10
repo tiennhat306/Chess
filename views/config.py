@@ -9,8 +9,8 @@ class Config:
         self.idx = 0
         self.theme = self.themes[self.idx]
         self.font = pygame.font.SysFont('monospace', 18, bold=True)
-        self.move_sound = Sound(os.path.join('../static/sounds/move.wav'))
-        self.capture_sound = Sound(os.path.join('../static/sounds/capture.wav'))
+        self.move_sound = Sound(os.path.join('static/sounds/move.wav'))
+        self.capture_sound = Sound(os.path.join('static/sounds/capture.wav'))
     
     def _add_themes(self):
         green = Theme((234, 235, 200), (119, 154, 88), (244, 247, 116), (172, 195, 51), '#C86464', '#C84646')

@@ -10,11 +10,10 @@ class Main:
     def __init__(self):
         pygame.init()
         self.screen = pygame.display.set_mode( (WIDTH, HEIGHT) )
-        pygame.display.set_caption('Chess')
+        pygame.display.set_caption('Cờ vua')
         self.game = Game()
 
-    def mainloop(self):
-
+    def loop(self):
         screen = self.screen
         game = self.game
         board = self.game.board
@@ -22,7 +21,6 @@ class Main:
         dragger = self.game.dragger
 
         while True:
-            
             if not game.selected_piece:
                 game.show_bg(screen)
                 game.show_pieces(screen)
@@ -33,7 +31,6 @@ class Main:
                 dragger.update_blit(screen)
 
             for event in pygame.event.get():
-                
                 # mouse click
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     dragger.update_mouse(event.pos)
@@ -59,7 +56,7 @@ class Main:
                     if dragger.dragging:
                         dragger.update_mouse(event.pos)
 
-                        # released pos
+                        # released position
                         released_row = dragger.mouseY // SQUARE_SIZE
                         released_col = dragger.mouseX // SQUARE_SIZE
 
@@ -78,6 +75,9 @@ class Main:
                             # draw
                             game.show_bg(screen)
                             game.show_pieces(screen)
+
+                            self.check_end_game()
+
                             # next -> AI
                             game.next_turn()
                             
@@ -127,8 +127,6 @@ class Main:
 
                 # key press
                 elif event.type == pygame.KEYDOWN:
-
-                    
                     # reset
                     if event.key == pygame.K_r:
                         game.reset()
@@ -144,7 +142,21 @@ class Main:
                     sys.exit()
 
             pygame.display.update()
-    
+
+    def drawEndGameText(self, screen, text):
+        font = pygame.font.Font(None, 36)
+        text = font.render(text, True, (255, 255, 255))
+        text_rect = text.get_rect(center=(WIDTH//2, HEIGHT//2))
+        screen.blit(text, text_rect)
+
+    def check_end_game(self):
+        checkmate = self.game.board.check_mate()
+        if checkmate == 1:
+            self.drawEndGameText(self.screen, 'Trắng thắng')
+        elif checkmate == -1:
+            self.drawEndGameText(self.screen, 'Đen thắng')
+
+
 if __name__ == '__main__':
     m = Main()
-    m.mainloop()
+    m.loop()

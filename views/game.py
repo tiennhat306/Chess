@@ -1,6 +1,6 @@
 import pygame
 
-from chess_ai.ai import AI
+from ai import AI
 from utils.const import *
 from chess_engine.board import Board
 from views.config import Config
