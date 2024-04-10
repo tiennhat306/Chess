@@ -20,6 +20,7 @@ class Game:
         self.ai = AI()
 
 
+
     def show_bg(self, surface):
         theme = self.config.theme
 

@@ -76,7 +76,7 @@ class Main:
                             game.show_bg(screen)
                             game.show_pieces(screen)
 
-                            self.check_end_game()
+                            self.check_mate()
 
                             # Đến lượt -> AI
                             game.next_turn()
@@ -102,6 +102,8 @@ class Main:
                             # draw
                             game.show_bg(screen)
                             game.show_pieces(screen)
+
+                            self.check_mate()
                             # next -> AI
                             game.next_turn()
                     
@@ -142,22 +144,15 @@ class Main:
 
             pygame.display.update()
 
-    def drawEndGameText(self, screen, text):
-        font = pygame.font.Font(None, 36)
-        text = font.render(text, True, (255, 255, 255))
-        text_rect = text.get_rect(center=(WIDTH//2, HEIGHT//2))
-        screen.blit(text, text_rect)
+    def check_mate(self):
+        check_mate = self.game.board.check_mate()
+        print(f'* CHECK MATE: {check_mate}')
+        if check_mate == -1:
+            print(f'* ĐEN THẮNG!')
 
-    def check_end_game(self):
-        checkmate = self.game.board.check_mate()
-        if checkmate == 1:
-            self.drawEndGameText(self.screen, 'Trắng thắng')
-        elif checkmate == -1:
-            self.drawEndGameText(self.screen, 'Đen thắng')
+        elif check_mate == 1:
+            print(f'* TRẮNG THẮNG!')
 
-        stalemate = self.game.board.stale_mate()
-        if stalemate:
-            self.drawEndGameText(self.screen, 'Hòa')
 
 
 if __name__ == '__main__':

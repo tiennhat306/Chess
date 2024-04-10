@@ -88,14 +88,15 @@ class Board:
                 square = self.squares[row][col]
                 if square.has_piece():
                     piece = square.piece
+                    self.calc_moves(piece, row, col)
                     if piece.color == 'white':
                         count_moves_white += len(piece.moves)
                     else:
                         count_moves_black += len(piece.moves)
 
-        if count_moves_white == 0 or count_moves_black == 0:
-            return 1
-        return 0
+        if count_moves_white != 0 and count_moves_black != 0:
+            0
+        return 1
 
 
     def valid_move(self, piece, move):

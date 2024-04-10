@@ -96,43 +96,9 @@ class AI:
                 scores = queen_scores
             elif piece.color == 'black':
                 scores = queen_scores[::-1]
-        
-        # elif piece.name == 'king':
-        #     king_scores = [
-        #         [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
-        #         [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
-        #         [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
-        #         [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
-        #         [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
-        #         [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
-        #         [0.02, 0.02, 0.00, 0.00, 0.00, 0.00, 0.02, 0.02],
-        #         [0.05, 0.50, 0.10, 0.00, 0.00, 0.00, 0.10, 0.05]
-        #     ]
-        #     if piece.color == 'white':
-        #         scores = king_scores
-        #
-        #     elif piece.color == 'black':
-        #         scores = king_scores[::-1]
 
-
-        # eval = -scores[row][col] if piece.color == 'black' else scores[row][col]
         return scores[row][col]
 
-    # def threats(self, board, piece):
-    #     eval = 0
-    #     for move in piece.moves:
-    #         attacked = board.squares[move.final.row][move.final.col]
-    #         if attacked.has_piece():
-    #             if attacked.piece.color != piece.color:
-    #                 # checks
-    #                 if attacked.piece.name == 'king':
-    #                     eval += attacked.piece.value / 10500
-    #
-    #                 # threat
-    #                 else:
-    #                     eval += attacked.piece.value / 45
-    #
-    #     return eval
 
     def score_board(self, board):
         # var
@@ -141,7 +107,6 @@ class AI:
         for row in range(ROWS):
             for col in range(COLS):
                 if board.squares[row][col].has_piece():
-                    # piece
                     piece =  board.squares[row][col].piece
 
                     piece_position_score = 0
@@ -152,18 +117,6 @@ class AI:
                     elif piece.color == 'black':
                         score += piece.value + piece_position_score
 
-                    # score += piece.value
-                    # # scoremap
-                    # score += self.scoremap(piece, row, col)
-                    # # moves
-                    # if piece.name != 'queen':
-                    #     score += 0.01 * len(piece.moves)
-                    # else:
-                    #     score += 0.003 * len(piece.moves)
-                    # # checks
-                    # score += self.threats(board, piece)
-
-        # score = round(score, 5)
         return score
 
     def get_moves(self, board, color):
@@ -245,8 +198,7 @@ class AI:
         print('\n- Initial eval:', self.score_board(main_board))
         print('- Final eval:', eval)
         print('- Boards explored', self.explored)
-        # if eval >= 5000: print('* White MATE!')
-        # if eval <= -5000: print('* Black MATE!')
+
             
         # append
         self.game_moves.append(move)
