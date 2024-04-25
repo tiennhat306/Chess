@@ -99,6 +99,25 @@ class AI:
 
         return scores[row][col]
 
+    def threats(self, board, piece):
+        eval = 0
+        for move in piece.moves:
+            attacked_square = board.squares[move.final.row][move.final.col]
+            if attacked_square.has_piece():
+                attacked_piece = attacked_square.piece
+                if attacked_piece.color != piece.color:
+                    if attacked_piece.name == 'king':
+                        if attacked_piece.color == 'white':
+                            eval += 10000
+                        elif attacked_piece.color == 'black':
+                            eval -= 10000
+
+        if(eval != 0):
+            print('Threats:', eval)
+        
+        return eval
+
+        
 
     def score_board(self, board):
         # var
@@ -116,6 +135,10 @@ class AI:
                         score -= piece.value + piece_position_score
                     elif piece.color == 'black':
                         score += piece.value + piece_position_score
+                    
+                    score += self.threats(board, piece)
+
+        print('Score:', score)
 
         return score
 
