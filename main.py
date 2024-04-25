@@ -113,12 +113,12 @@ class Main:
                                 #     # is_running = False
                                 # else:
 
-                                    # Đến lượt -> AI
-                                    game.next_turn()
+                                # Đến lượt -> AI
+                                game.next_turn()
 
-                                    # --------- AI ----------
+                                # --------- AI ----------
 
-
+                                if game.gamemode == 'ai':
                                     # update
                                     game.unselect_piece()
                                     game.show_pieces(screen)
@@ -192,9 +192,29 @@ class Main:
 
                 # key press
                 elif event.type == pygame.KEYDOWN:
+                    # gamemode
+                    if event.key == pygame.K_a:
+                        game.change_gamemode()
+
                     # changing themes
                     if event.key == pygame.K_t:
                         game.change_theme()
+
+                    # press 1
+                    if event.key == pygame.K_1:
+                        game.board.change_promotion_piece('queen')
+                    
+                    # press 2
+                    if event.key == pygame.K_2:
+                        game.board.change_promotion_piece('rook')
+
+                    # press 3
+                    if event.key == pygame.K_3:
+                        game.board.change_promotion_piece('bishop')
+
+                    # press 4
+                    if event.key == pygame.K_4:
+                        game.board.change_promotion_piece('knight')
 
                     # reset
                     if event.key == pygame.K_r:

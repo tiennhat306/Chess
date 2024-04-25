@@ -11,13 +11,20 @@ class Board:
         self._add_pieces('white')
         self._add_pieces('black')
         self.last_move = None
+        self.promotionPiece = 'queen'
 
     def move(self, piece, move):
         initial = move.initial
         final = move.final
+        
+        # Kiểm tra điều kiện bắt tốt qua đường
+        if piece.name == 'pawn' and initial.col != final.col and self.squares[final.row][final.col].isempty():
+            self.squares[final.row - piece.dir][final.col].piece = None
+
         # Cập nhật bàn cờ sau nước đi
         self.squares[initial.row][initial.col].piece = None
         self.squares[final.row][final.col].piece = piece
+
 
         # Kiểm tra điều kiện nhập thành
         if piece.name == 'king':
@@ -57,7 +64,25 @@ class Board:
         promote_row = 0 if piece.color == 'white' else 7
 
         if final.row == promote_row:
-            self.squares[final.row][final.col].piece = Queen(piece.color)
+            if self.promotionPiece == 'queen':
+                self.squares[final.row][final.col].piece = Queen(piece.color)
+            elif self.promotionPiece == 'rook':
+                self.squares[final.row][final.col].piece = Rook(piece.color)
+            elif self.promotionPiece == 'bishop':
+                self.squares[final.row][final.col].piece = Bishop(piece.color)
+            elif self.promotionPiece == 'knight':
+                self.squares[final.row][final.col].piece = Knight(piece.color)
+
+    def change_promotion_piece(self, piece):
+        if piece == 'queen':
+            self.promotionPiece = 'queen'
+        elif piece == 'rook':
+            self.promotionPiece = 'rook'
+        elif piece == 'bishop':
+            self.promotionPiece = 'bishop'
+        elif piece == 'knight':
+            self.promotionPiece = 'knight'
+
 
     def check_mate(self):
         white_king = False
@@ -142,6 +167,19 @@ class Board:
                         final = Square(move_row, move_col, self.squares[move_row][move_col].piece)
                         move = Move(initial, final)
                         piece.add_move(move)
+
+            # Kiểm tra nước đi bắt tốt qua đường
+            if self.last_move:
+                last_piece = self.squares[self.last_move.final.row][self.last_move.final.col].piece
+                if last_piece.name == 'pawn' and self.last_move.final.row == row and abs(self.last_move.final.row - self.last_move.initial.row) == 2:
+                    if abs(self.last_move.final.col - col) == 1:
+                        if self.squares[row][self.last_move.final.col].has_rival_piece(piece.color):
+                            initial = Square(row, col)
+                            print('dir: ', piece.dir)
+                            final = Square(row + piece.dir, self.last_move.final.col, self.squares[row + piece.dir][self.last_move.final.col].piece)
+                            move = Move(initial, final)
+                            piece.add_move(move)
+
         
         def knight():
             # Các nước đi có thể của quân mã

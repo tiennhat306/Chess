@@ -14,6 +14,7 @@ class Game:
         self.config = Config()
         self.dragger = Dragger()
         self.next_player = 'white'
+        self.gamemode = 'ai'
         self.selected_piece = None
         self.hovered_square = None
         self.result = -1
@@ -128,6 +129,9 @@ class Game:
     
     def unselect_piece(self):
         self.selected_piece = None
+
+    def change_gamemode(self):
+        self.gamemode = 'ai' if self.gamemode == 'pvp' else 'pvp'
 
     def change_theme(self):
         self.config.change_theme()
