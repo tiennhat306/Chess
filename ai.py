@@ -111,16 +111,12 @@ class AI:
                             eval += 10000
                         elif attacked_piece.color == 'black':
                             eval -= 10000
-
-        if(eval != 0):
-            print('Threats:', eval)
         
         return eval
 
         
 
     def score_board(self, board):
-        # var
         score = 0
 
         for row in range(ROWS):
@@ -137,8 +133,6 @@ class AI:
                         score += piece.value + piece_position_score
                     
                     score += self.threats(board, piece)
-
-        print('Score:', score)
 
         return score
 
