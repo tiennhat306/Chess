@@ -214,10 +214,11 @@ class Board:
                         initial = Square(row, col)
                         final = Square(move_row, move_col, self.squares[move_row][move_col].piece)
                         move = Move(initial, final)
-                        piece.add_move(move)
+                        if not self.is_square_under_attack(move_row, move_col, piece.color):
+                            piece.add_move(move)
                 
             # Kiểm tra điều kiện nhập thành
-            if not piece.moved:
+            if not piece.moved and not self.is_square_under_attack(row, col, piece.color):
                 # Nhập thành bên trái
                 lRook = self.squares[row][0].piece
                 if isinstance(lRook, Rook):
@@ -228,8 +229,9 @@ class Board:
                                 # new move
                                 initial = Square(row, col)
                                 final = Square(row, 2)
-                                move = Move(initial, final)
-                                piece.add_move(move)
+                                if not self.is_square_under_attack(row, 2, piece.color):
+                                    move = Move(initial, final)
+                                    piece.add_move(move)
 
                 # Nhâp thành bên phải
                 rRook = self.squares[row][7].piece
@@ -241,8 +243,9 @@ class Board:
                                 # new move
                                 initial = Square(row, col)
                                 final = Square(row, 6)
-                                move = Move(initial, final)
-                                piece.add_move(move)
+                                if not self.is_square_under_attack(row, 6, piece.color):
+                                    move = Move(initial, final)
+                                    piece.add_move(move)
 
         if piece.name == 'pawn': 
             pawn()
@@ -262,7 +265,87 @@ class Board:
         elif piece.name == 'king': 
             king()
 
+    def is_square_under_attack(self, move_row, move_col, color):
+        for row in range(ROWS):
+            for col in range(COLS):
+                square = self.squares[row][col]
+                if square.piece is not None and square.piece.color != color:
+                    # self.calc_moves(square.piece, row, col)
+                    # for move in square.piece.moves:
+                    #     if move.final.row == move_row and move.final.col == move_col:
+                    #         return True
+                    # if self.can_attack(square.piece, row, col, move_row, move_col):
+                    #     print('piece:', square.piece.name)
+                    #     print('row:', row, 'col:', col)
+                    #     print('can_attack:', self.can_attack(square.piece, row, col, move_row, move_col))
+                    if self.can_attack(row, col, move_row, move_col):
+                        return True
+        return False
+    
+    def can_attack(self, row, col, move_row, move_col):
+        piece = self.squares[row][col].piece
+        def pawn():
+            if piece.color == 'black':
+                dir = 1
+            else:
+                dir = -1
 
+            if move_row == row + dir and (move_col == col - 1 or move_col == col + 1):
+                return True
+
+        def knight():
+            possible_moves = [
+                (row - 2, col + 1),
+                (row - 1, col + 2),
+                (row + 1, col + 2),
+                (row + 2, col + 1),
+                (row + 2, col - 1),
+                (row + 1, col - 2),
+                (row - 1, col - 2),
+                (row - 2, col - 1),
+            ]
+
+            for possible_move in possible_moves:
+                if possible_move == (move_row, move_col):
+                    return True
+
+        def bishop():
+            if abs(move_row - row) == abs(move_col - col):
+                return self.is_path_clear(row, col, move_row, move_col)
+
+        def rook():
+            if move_row == row or move_col == col:
+                return self.is_path_clear(row, col, move_row, move_col)
+
+        def queen():
+            # if abs(move_row - row) == abs(move_col - col) or move_row == row or move_col == col:
+            #     return self.is_path_clear(row, col, move_row, move_col)
+            return bishop() or rook()
+
+        def king():
+            if abs(move_row - row) <= 1 and abs(move_col - col) <= 1:
+                return True
+
+        if piece.name == 'pawn': return pawn()
+        if piece.name == 'knight': return knight()
+        if piece.name == 'bishop': return bishop()
+        if piece.name == 'rook': return rook()
+        if piece.name == 'queen': return queen()
+        if piece.name == 'king': return king()
+
+
+    def is_path_clear(self, start_row, start_col, end_row, end_col):
+        row_step = 0 if start_row == end_row else 1 if start_row < end_row else -1
+        col_step = 0 if start_col == end_col else 1 if start_col < end_col else -1
+
+        row, col = start_row + row_step, start_col + col_step
+        while row != end_row or col != end_col:
+            if self.squares[row][col].has_piece():
+                return False
+            row += row_step
+            col += col_step
+
+        return True
 
     def _create(self):
         self.squares = [[0, 0, 0, 0, 0, 0, 0, 0] for col in range(COLS)]

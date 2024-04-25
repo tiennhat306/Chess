@@ -149,7 +149,7 @@ class AI:
 
     def minimax(self, board, depth, maximizing, alpha, beta):
         if depth == 0:
-            return self.score_board(board), None # eval, move
+            return self.score_board(board), None
         
         if maximizing:
             max_eval = -math.inf
