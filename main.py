@@ -193,7 +193,7 @@ class Main:
                 # key press
                 elif event.type == pygame.KEYDOWN:
                     # gamemode
-                    if event.key == pygame.K_a:
+                    if event.key == pygame.K_m:
                         game.change_gamemode()
 
                     # changing themes
