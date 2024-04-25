@@ -16,8 +16,30 @@ class Game:
         self.next_player = 'white'
         self.selected_piece = None
         self.hovered_square = None
+        self.result = -1
 
         self.ai = AI()
+
+    def set_result(self, result):
+        self.result = result
+
+    def draw_end_game_text(self, surface):
+        text = 'DRAW!' if self.result == 0 else 'BLACK WINS!' if self.result == 1 else 'WHITE WINS!' if self.result == 2 else ''
+        overlay = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
+        overlay.fill((0, 0, 0, 128))  # RGBA
+
+        # Create the text surface
+        font = pygame.font.Font(None, 36)
+
+        text_surface = font.render(text, True, (255, 255, 255))
+
+        # Calculate the position to center the text
+        text_rect = text_surface.get_rect(center=(WIDTH / 2, HEIGHT / 2))
+
+        # Draw the overlay and the text
+        surface.blit(overlay, (0, 0))
+        surface.blit(text_surface, text_rect)
+
 
 
 
@@ -47,6 +69,9 @@ class Game:
 
         if self.selected_piece:
             self.show_moves(surface)
+
+        if self.result != -1:
+            self.draw_end_game_text(surface)
 
     def show_pieces(self, surface):
         for row in range(ROWS):
@@ -103,6 +128,9 @@ class Game:
     
     def unselect_piece(self):
         self.selected_piece = None
+
+    def change_theme(self):
+        self.config.change_theme()
 
     def reset(self):
         self.__init__()

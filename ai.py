@@ -134,7 +134,6 @@ class AI:
         if depth == 0:
             return self.score_board(board), None # eval, move
         
-        # white
         if maximizing:
             max_eval = -math.inf
             moves = self.get_moves(board, 'black')
@@ -144,7 +143,7 @@ class AI:
                 temp_board = copy.deepcopy(board)
                 temp_board.move(piece, move)
                 piece.moved = False
-                eval = self.minimax(temp_board, depth-1, False, alpha, beta)[0] # eval, mov
+                eval, mov = self.minimax(temp_board, depth-1, False, alpha, beta)
                 if eval > max_eval:
                     max_eval = eval
                     best_move = move
@@ -153,11 +152,15 @@ class AI:
                 if beta <= alpha: break
 
             if not best_move:
-                best_move = moves[0]
+                if len(moves) > 0:
+                    idx = random.randrange(0, len(moves))
+                    best_move = moves[idx]
+                else :
+                    best_move = None
+                    return 0, best_move
 
-            return max_eval, best_move # eval, move
+            return max_eval, best_move
         
-        # black
         elif not maximizing:
             min_eval = math.inf
             moves = self.get_moves(board, 'white')
@@ -167,7 +170,7 @@ class AI:
                 temp_board = copy.deepcopy(board)
                 temp_board.move(piece, move)
                 piece.moved = False
-                eval = self.minimax(temp_board, depth-1, True, alpha, beta)[0] # eval, move
+                eval, mov = self.minimax(temp_board, depth-1, True, alpha, beta)
                 if eval < min_eval:
                     min_eval = eval
                     best_move = move
@@ -176,10 +179,14 @@ class AI:
                 if beta <= alpha: break
             
             if not best_move:
-                idx = random.randrange(0, len(moves))
-                best_move = moves[idx]
+                if len(moves) > 0:
+                    idx = random.randrange(0, len(moves))
+                    best_move = moves[idx]
+                else :
+                    best_move = None
+                    return 0, best_move
 
-            return min_eval, best_move # eval, move
+            return min_eval, best_move
 
 
     def find_best_move(self, main_board):
@@ -192,15 +199,21 @@ class AI:
         print('\nFinding best move...')
 
         # minimax initial call
-        eval, move = self.minimax(main_board, self.depth, True, -math.inf, math.inf) # eval, move
+        eval, move = self.minimax(main_board, self.depth, True, -math.inf, math.inf)
 
-        # printing
-        print('\n- Initial eval:', self.score_board(main_board))
-        print('- Final eval:', eval)
-        print('- Boards explored', self.explored)
+        # if (move == None):
+        #     print('No valid move found!')
+        #     if len(self.game_moves) > 0:
+        #         self.game_moves.pop()
+        #     return None
+        # else:
+        #     # printing
+        #     print('\n- Initial eval:', self.score_board(main_board))
+        #     print('- Final eval:', eval)
+        #     print('- Boards explored', self.explored)
 
             
         # append
         self.game_moves.append(move)
         
-        return move
+        return eval, move

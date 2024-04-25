@@ -79,7 +79,7 @@ class Board:
         if white_king: return 1
         if black_king: return -1
 
-    def stale_mate(self):
+    def check_stale_mate(self):
         count_moves_white = 0
         count_moves_black = 0
 
@@ -94,9 +94,14 @@ class Board:
                     else:
                         count_moves_black += len(piece.moves)
 
-        if count_moves_white != 0 and count_moves_black != 0:
-            0
-        return 1
+        # if count_moves_white != 0 and count_moves_black != 0:
+        #     0
+        # return 1
+        print('count_moves_white:', count_moves_white)
+        print('count_moves_black:', count_moves_black)
+        if count_moves_white == 0 or count_moves_black == 0:
+            return 1
+        return 0
 
 
     def valid_move(self, piece, move):

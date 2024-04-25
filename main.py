@@ -29,10 +29,27 @@ class Main:
 
             if dragger.dragging:
                 dragger.update_blit(screen)
+                
 
             for event in pygame.event.get():
                 # mouse click
                 if event.type == pygame.MOUSEBUTTONDOWN:
+                    # checkmate = self.check_mate()
+                    # if checkmate == -1:
+                    #     # game.draw_end_game_text(screen, 1)
+                    #     game.set_result(1)
+                    #     game.show_bg(screen)
+                    #     game.show_pieces(screen)
+                    #     # pygame.display.update()
+                    #     # is_running = False
+                    # elif checkmate == 1:
+                    #     # game.draw_end_game_text(screen, 'TRẮNG THẮNG!')
+                    #     game.set_result(2)
+                    #     game.show_bg(screen)
+                    #     game.show_pieces(screen)
+                    #     # pygame.display.update()
+                    #     # is_running = False
+
                     dragger.update_mouse(event.pos)
 
                     pos = event.pos
@@ -53,6 +70,7 @@ class Main:
 
                 # mouse release
                 elif event.type == pygame.MOUSEBUTTONUP:
+
                     if dragger.dragging:
                         dragger.update_mouse(event.pos)
 
@@ -76,36 +94,82 @@ class Main:
                             game.show_bg(screen)
                             game.show_pieces(screen)
 
-                            self.check_mate()
+                            checkmate = self.check_mate()
+                            if checkmate == -1:
+                                game.set_result(1)
+                                game.show_bg(screen)
+                                game.show_pieces(screen)
+                            elif checkmate == 1:
+                                game.set_result(2)
+                                game.show_bg(screen)
+                                game.show_pieces(screen)
+                            else:
+                                # check_stalemate = board.check_stale_mate()
+                                # if check_stalemate == 1:
+                                #     game.set_result(0)
+                                #     game.show_bg(screen)
+                                #     game.show_pieces(screen)
+                                #     # pygame.display.update()
+                                #     # is_running = False
+                                # else:
 
-                            # Đến lượt -> AI
-                            game.next_turn()
+                                    # Đến lượt -> AI
+                                    game.next_turn()
 
-                            # --------- AI ----------
+                                    # --------- AI ----------
 
 
-                            # update
-                            game.unselect_piece()
-                            game.show_pieces(screen)
-                            pygame.display.update()
-                            # optimal move
-                            move = ai.find_best_move(board)
-                            initial = move.initial
-                            final = move.final
-                            # piece
-                            piece = board.squares[initial.row][initial.col].piece
-                            # capture
-                            captured = board.squares[final.row][final.col].has_piece()
-                            # move
-                            board.move(piece, move)
-                            game.sound_effect(captured)
-                            # draw
-                            game.show_bg(screen)
-                            game.show_pieces(screen)
+                                    # update
+                                    game.unselect_piece()
+                                    game.show_pieces(screen)
+                                    pygame.display.update()
+                                    # optimal move
+                                    eval, move = ai.find_best_move(board)
 
-                            self.check_mate()
-                            # next -> AI
-                            game.next_turn()
+                                    if move is not None :
+                                        initial = move.initial
+                                        final = move.final
+                                        # piece
+                                        piece = board.squares[initial.row][initial.col].piece
+                                        # capture
+                                        captured = board.squares[final.row][final.col].has_piece()
+                                        # move
+                                        board.move(piece, move)
+                                        game.sound_effect(captured)
+                                        # draw
+                                        game.show_bg(screen)
+                                        game.show_pieces(screen)
+
+                                        black_checkmate = self.check_mate()
+                                        if black_checkmate == -1:
+                                            game.set_result(1)
+                                            game.show_bg(screen)
+                                            game.show_pieces(screen)
+                                        elif black_checkmate == 1:
+                                            game.set_result(2)
+                                            game.show_bg(screen)
+                                            game.show_pieces(screen)
+                                        else:
+                                            # check_stalemate = board.check_stale_mate()
+                                            # if check_stalemate == 1:
+                                            #     game.set_result(0)
+                                            #     game.show_bg(screen)
+                                            #     game.show_pieces(screen)
+                                            #     # pygame.display.update()
+                                            #     # is_running = False
+                                            # else:
+                                            #     # next -> AI
+                                            game.next_turn()
+                                    
+                                    elif move is None:
+                                        if eval == 0:
+                                            game.set_result(0)
+                                            game.show_bg(screen)
+                                            game.show_pieces(screen)
+                                        else:
+                                            game.set_result(2)
+                                            game.show_bg(screen)
+                                            game.show_pieces(screen)
                     
                     game.unselect_piece()
                     dragger.undrag_piece()
@@ -128,6 +192,10 @@ class Main:
 
                 # key press
                 elif event.type == pygame.KEYDOWN:
+                    # changing themes
+                    if event.key == pygame.K_t:
+                        game.change_theme()
+
                     # reset
                     if event.key == pygame.K_r:
                         game.reset()
@@ -148,10 +216,12 @@ class Main:
         check_mate = self.game.board.check_mate()
         print(f'* CHECK MATE: {check_mate}')
         if check_mate == -1:
-            print(f'* ĐEN THẮNG!')
+            # print(f'* ĐEN THẮNG!')
+            return -1;
 
         elif check_mate == 1:
-            print(f'* TRẮNG THẮNG!')
+            # print(f'* TRẮNG THẮNG!')
+            return 1;
 
 
 
